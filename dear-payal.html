@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dear Payal 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-bg1:#ffe3ec;
+    --pink-bg2:#ffc2d8;
+    --pink:#ff4d8d;
+    --pink-dark:#e23a76;
+    --rasp:#c9184a;
+    --cream:#fff5f8;
+    --lilac:#c77dff;
+    --gold:#ffb703;
+    --ink:#7a1235;
+    --shadow:0 18px 40px rgba(201,24,74,.18);
+    --display:'Fredoka',system-ui,sans-serif;
+    --body:'Quicksand',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--body);
+    color:var(--ink);
+    background:linear-gradient(160deg,var(--pink-bg1),var(--pink-bg2));
+    min-height:100vh;
+    overflow-x:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    position:relative;
+  }
+
+  /* floating hearts background */
+  .hearts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .hearts span{
+    position:absolute;bottom:-40px;font-size:22px;opacity:.55;
+    animation:rise linear infinite;
+  }
+  @keyframes rise{
+    to{transform:translateY(-115vh) rotate(360deg);opacity:0}
+  }
+
+  .app{
+    position:relative;z-index:2;width:100%;max-width:480px;
+  }
+
+  .card{
+    background:var(--cream);
+    border-radius:30px;
+    padding:34px 26px 30px;
+    box-shadow:var(--shadow);
+    border:3px solid #ffd6e6;
+    text-align:center;
+    position:relative;
+    animation:pop .45s cubic-bezier(.18,.89,.32,1.28);
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.92) translateY(14px)}to{opacity:1;transform:none}}
+
+  .screen{display:none}
+  .screen.active{display:block}
+
+  .eyebrow{
+    font-family:var(--body);font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;font-size:11px;color:var(--pink);
+    background:#ffe0ec;display:inline-block;padding:5px 14px;border-radius:999px;
+    margin-bottom:16px;
+  }
+  h1{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.1;color:var(--rasp);margin-bottom:10px}
+  h2{font-family:var(--display);font-weight:600;font-size:25px;line-height:1.18;color:var(--rasp);margin-bottom:8px}
+  .sub{font-size:15px;color:#a23a63;margin-bottom:22px;line-height:1.5;font-weight:500}
+  .tiny{font-size:12.5px;color:#bd6486;margin-top:14px;font-weight:600}
+
+  .btn{
+    font-family:var(--display);font-weight:600;font-size:17px;
+    background:var(--pink);color:#fff;border:none;border-radius:18px;
+    padding:15px 22px;width:100%;cursor:pointer;margin-top:10px;
+    box-shadow:0 8px 0 var(--pink-dark);
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .btn:hover{filter:brightness(1.03)}
+  .btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--pink-dark)}
+  .btn.ghost{background:#fff;color:var(--pink);box-shadow:0 8px 0 #ffd0e2;border:2px solid #ffd0e2}
+  .btn.gold{background:var(--gold);box-shadow:0 8px 0 #d99400;color:#5a3b00}
+  .btn:focus-visible{outline:3px solid var(--lilac);outline-offset:3px}
+
+  .grid{display:grid;gap:12px;margin-top:6px}
+  .grid.two{grid-template-columns:1fr 1fr}
+
+  .chip{
+    font-family:var(--display);font-weight:500;font-size:15px;
+    background:#fff;border:2px solid #ffd0e2;border-radius:16px;
+    padding:16px 10px;cursor:pointer;transition:.15s;color:var(--ink);
+  }
+  .chip:hover{border-color:var(--pink);transform:translateY(-3px)}
+  .chip.sel{background:var(--pink);color:#fff;border-color:var(--pink)}
+  .chip .big{display:block;font-size:30px;margin-bottom:4px}
+
+  input[type=range]{width:100%;accent-color:var(--pink);height:8px;margin:8px 0}
+  input[type=date]{
+    font-family:var(--body);font-weight:600;font-size:16px;color:var(--ink);
+    border:2px solid #ffd0e2;border-radius:16px;padding:14px;width:100%;
+    background:#fff;text-align:center;
+  }
+  input[type=date]:focus{outline:3px solid var(--lilac);outline-offset:2px;border-color:var(--pink)}
+
+  .sliderwrap{background:#fff;border:2px solid #ffd0e2;border-radius:20px;padding:20px 18px;margin:6px 0 4px}
+  .sliderval{font-family:var(--display);font-size:30px;color:var(--pink);font-weight:700}
+
+  /* runaway No button area */
+  .ask-stage{position:relative;min-height:90px;margin-top:18px}
+  #noBtn{
+    position:relative;
+    background:#fff;color:#c77;box-shadow:0 8px 0 #f0c2cf;border:2px solid #f3c9d4;
+    transition:none;
+  }
+  #noBtn.run{position:fixed;z-index:50;width:auto;min-width:120px;margin:0}
+
+  /* progress dots */
+  .dots{display:flex;gap:7px;justify-content:center;margin-top:22px}
+  .dots i{width:8px;height:8px;border-radius:50%;background:#ffd0e2;transition:.3s;display:inline-block}
+  .dots i.on{background:var(--pink);transform:scale(1.25)}
+
+  /* TICKET */
+  .ticket{
+    background:linear-gradient(150deg,#fff,#fff0f6);
+    border-radius:24px;border:2px dashed var(--pink);
+    text-align:left;padding:0;overflow:hidden;margin-top:8px;
+    box-shadow:0 12px 30px rgba(201,24,74,.2);
+  }
+  .ticket-top{background:var(--pink);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+  .ticket-top .t-title{font-family:var(--display);font-weight:700;font-size:20px}
+  .ticket-top .t-id{font-size:11px;opacity:.85;font-weight:600;letter-spacing:1px}
+  .ticket-body{padding:18px 20px}
+  .trow{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dotted #ffc2d8}
+  .trow:last-child{border-bottom:none}
+  .tlabel{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--pink);font-weight:700}
+  .tval{font-family:var(--display);font-weight:600;font-size:15px;color:var(--ink);text-align:right;max-width:60%}
+  .barcode{height:46px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px);margin:14px 20px 18px;border-radius:4px;opacity:.85}
+  .stamp{
+    display:inline-block;border:2px solid var(--gold);color:var(--gold);
+    font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:1px;
+    padding:4px 10px;border-radius:8px;transform:rotate(-8deg);margin-top:4px;
+  }
+
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+  .confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+
+  .wiggle{display:inline-block;animation:wig 1.4s ease-in-out infinite}
+  @keyframes wig{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+
+  .footer-note{font-size:11px;color:#cf86a3;margin-top:18px;font-weight:600}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .hearts{display:none}
+  }
+  @media (max-width:380px){
+    h1{font-size:29px}.card{padding:28px 20px}
+  }
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts"></div>
+<div class="confetti" id="confetti"></div>
+
+<div class="app">
+
+  <!-- 0: WELCOME -->
+  <section class="screen active card" data-step="0">
+    <div class="eyebrow">Top Secret · Authorized Cuties Only</div>
+    <div style="font-size:54px" class="wiggle">💌</div>
+    <h1>Dear Payal</h1>
+    <p class="sub">Welcome to the official <b>Date Request Portal™</b>.<br>
+    Warning: this app is 99% compliments and 1% actual logistics. 🥹</p>
+    <button class="btn" onclick="go(1)">I'm Payal, let me in 👑</button>
+    <button class="btn ghost" onclick="impostor()">I'm not Payal 🤔</button>
+    <div class="tiny" id="welcomeTiny"></div>
+    <div class="footer-note">Built with way too much love by him 💗</div>
+  </section>
+
+  <!-- 1: IDENTITY VERIFICATION -->
+  <section class="screen card" data-step="1">
+    <div class="eyebrow">Step 1 · Security Check</div>
+    <h2>Verifying your identity… 🔍</h2>
+    <p class="sub">Quick question to confirm it's really you.<br>Who is the prettiest girl on this entire planet?</p>
+    <div class="grid">
+      <button class="btn" onclick="go(2)">Obviously me 💁‍♀️</button>
+      <button class="btn ghost" onclick="humble()">Umm… not me 🙈</button>
+    </div>
+    <div class="tiny" id="idTiny"></div>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 2: CUTENESS METER -->
+  <section class="screen card" data-step="2">
+    <div class="eyebrow">Step 2 · Calibration</div>
+    <h2>Set your cuteness level 🎚️</h2>
+    <p class="sub">Be honest. The system has feelings and it <i>will</i> argue with you.</p>
+    <div class="sliderwrap">
+      <div class="sliderval" id="cuteVal">100%</div>
+      <input type="range" id="cute" min="0" max="100" value="100" oninput="cuteMove(this.value)" onchange="cuteRelease()">
+      <div class="tiny" id="cuteMsg">Perfect. As expected. 😌</div>
+    </div>
+    <button class="btn" onclick="go(3)">That feels accurate ➡️</button>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 3: THE BIG ASK (runaway No) -->
+  <section class="screen card" data-step="3">
+    <div class="eyebrow">Step 3 · The Real Question</div>
+    <div style="font-size:46px">🥺👉👈</div>
+    <h2>Will you go on a date with me?</h2>
+    <p class="sub">Take your time. (The "No" button is a little shy though.)</p>
+    <div class="ask-stage">
+      <button class="btn" style="margin-bottom:6px" onclick="yesPlease()">YES, a thousand times 💖</button>
+      <button class="btn" id="noBtn" onmouseover="runAway()" onclick="runAway()">No</button>
+    </div>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 4: DATE PICKER -->
+  <section class="screen card" data-step="4">
+    <div class="eyebrow">Step 4 · Save The Date</div>
+    <h2>When are you free, gorgeous? 📅</h2>
+    <p class="sub">Pick a day. I'll clear my entire schedule. (It's empty, but still.)</p>
+    <input type="date" id="datePick">
+    <button class="btn" style="margin-top:14px" onclick="pickDate()">Lock it in 🔒</button>
+    <div class="tiny" id="dateTiny"></div>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 5: TIME PICKER -->
+  <section class="screen card" data-step="5">
+    <div class="eyebrow">Step 5 · Pick A Time</div>
+    <h2>What time works? ⏰</h2>
+    <p class="sub">Each option is scientifically tested for maximum vibes.</p>
+    <div class="grid two">
+      <div class="chip" data-time="Morning ☕ (8–11 AM)" onclick="pickTime(this)"><span class="big">🌅</span>Morning<br><small>coffee energy</small></div>
+      <div class="chip" data-time="Afternoon ☀️ (12–4 PM)" onclick="pickTime(this)"><span class="big">☀️</span>Afternoon<br><small>lunch date</small></div>
+      <div class="chip" data-time="Evening 🌆 (5–8 PM)" onclick="pickTime(this)"><span class="big">🌆</span>Evening<br><small>golden hour</small></div>
+      <div class="chip" data-time="Night 🌙 (8 PM onwards)" onclick="pickTime(this)"><span class="big">🌙</span>Night<br><small>star gazing</small></div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="go(6)" id="timeNext" disabled>Continue ➡️</button>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 6: NEAR OR FAR -->
+  <section class="screen card" data-step="6">
+    <div class="eyebrow">Step 6 · Distance</div>
+    <h2>Near or far? 🗺️</h2>
+    <p class="sub">Cozy little outing, or full-blown adventure? No wrong answers, only good ones.</p>
+    <div class="grid two">
+      <div class="chip" data-dist="Near" onclick="pickDist(this)"><span class="big">🏠</span>Near<br><small>quick & cozy</small></div>
+      <div class="chip" data-dist="Far" onclick="pickDist(this)"><span class="big">🚗</span>Far<br><small>mini road trip</small></div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="go(7)" id="distNext" disabled>Continue ➡️</button>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 7: CRAVING -->
+  <section class="screen card" data-step="7">
+    <div class="eyebrow">Step 7 · The Important Part</div>
+    <h2>What's the craving today? 😋</h2>
+    <p class="sub">This decides our entire menu. Choose wisely (or don't, I'll feed you either way).</p>
+    <div class="grid two">
+      <div class="chip" data-crave="spicy" onclick="pickCrave(this)"><span class="big">🌶️</span>Spicy<br><small>set it on fire</small></div>
+      <div class="chip" data-crave="sweet" onclick="pickCrave(this)"><span class="big">🍰</span>Sweet<br><small>dessert first</small></div>
+      <div class="chip" data-crave="cheesy" onclick="pickCrave(this)"><span class="big">🧀</span>Cheesy<br><small>melty goodness</small></div>
+      <div class="chip" data-crave="surprise" onclick="pickCrave(this)"><span class="big">🎁</span>Surprise me<br><small>trust him</small></div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="pickHunger()" id="craveNext" disabled>Continue ➡️</button>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 8: HUNGER -->
+  <section class="screen card" data-step="8">
+    <div class="eyebrow">Step 8 · Final Calibration</div>
+    <h2>How hungry are we? 🍽️</h2>
+    <p class="sub">Slide to your truth. This is a safe space.</p>
+    <div class="sliderwrap">
+      <div class="sliderval" id="hungerVal">Just a snack 🍪</div>
+      <input type="range" id="hunger" min="0" max="100" value="50" oninput="hungerMove(this.value)">
+    </div>
+    <button class="btn gold" style="margin-top:14px" onclick="generate()">Generate my date plan ✨</button>
+    <div class="dots" data-dots></div>
+  </section>
+
+  <!-- 9: RESULT TICKET -->
+  <section class="screen card" data-step="9">
+    <div class="eyebrow">Reservation Confirmed 🎉</div>
+    <h2 id="resultHeadline">Your date is officially booked! 💞</h2>
+    <p class="sub" id="resultLine">Here's everything, on one cute little pass.</p>
+
+    <div class="ticket" id="ticket">
+      <div class="ticket-top">
+        <div class="t-title">DATE PASS</div>
+        <div class="t-id" id="ticketId">#PAYAL-0001</div>
+      </div>
+      <div class="ticket-body">
+        <div class="trow"><span class="tlabel">Guest of honour</span><span class="tval">Payal 👑</span></div>
+        <div class="trow"><span class="tlabel">Date</span><span class="tval" id="rDate">—</span></div>
+        <div class="trow"><span class="tlabel">Time</span><span class="tval" id="rTime">—</span></div>
+        <div class="trow"><span class="tlabel">Distance</span><span class="tval" id="rDist">—</span></div>
+        <div class="trow"><span class="tlabel">The plan</span><span class="tval" id="rPlan">—</span></div>
+        <div class="trow"><span class="tlabel">On the menu</span><span class="tval" id="rFood">—</span></div>
+        <div class="trow"><span class="tlabel">Dress code</span><span class="tval" id="rDress">—</span></div>
+        <div class="trow"><span class="tlabel">Seat</span><span class="tval">VIP — right next to Tuhu the Pegga 🥰</span></div>
+      </div>
+      <div style="text-align:center"><span class="stamp">APPROVED ♥</span></div>
+      <div class="barcode"></div>
+    </div>
+
+    <div style="background:#fff0f6;border:2px dashed var(--pink);border-radius:18px;padding:16px;margin-top:18px">
+      <div style="font-family:var(--display);font-weight:700;font-size:18px;color:var(--rasp)">📸 One last step!</div>
+      <p class="sub" style="margin:6px 0 0">Take a <b>screenshot</b> of this pass and <b>send it to Tuhu the Pegga</b>.<br>That's how the reservation gets confirmed. 💌</p>
+      <div style="font-family:var(--display);font-weight:700;font-size:16px;color:var(--pink);margin-top:12px">— with all his love, Tuhu the Pegga 💗</div>
+    </div>
+
+    <button class="btn ghost" style="margin-top:16px" onclick="restart()">Plan another one 🔁</button>
+    <div class="footer-note">P.S. Tuhu the Pegga has been smiling this whole time, just so you know. 🥹💗</div>
+  </section>
+
+</div>
+
+<script>
+  /* ---------- floating hearts ---------- */
+  (function(){
+    const wrap=document.getElementById('hearts');
+    const set=['💕','💖','🌸','💗','✨','🩷','💞'];
+    for(let i=0;i<16;i++){
+      const s=document.createElement('span');
+      s.textContent=set[Math.floor(Math.random()*set.length)];
+      s.style.left=Math.random()*100+'vw';
+      s.style.fontSize=(16+Math.random()*22)+'px';
+      s.style.animationDuration=(7+Math.random()*9)+'s';
+      s.style.animationDelay=(Math.random()*8)+'s';
+      wrap.appendChild(s);
+    }
+  })();
+
+  /* ---------- state + navigation ---------- */
+  const state={date:'',time:'',dist:'',crave:'',hunger:'snack'};
+  const TOTAL=9;
+  let current=0;
+
+  function go(step){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el=document.querySelector('.screen[data-step="'+step+'"]');
+    el.classList.add('active');
+    current=step;
+    paintDots();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function paintDots(){
+    document.querySelectorAll('[data-dots]').forEach(d=>{
+      d.innerHTML='';
+      for(let i=1;i<=TOTAL;i++){
+        const dot=document.createElement('i');
+        if(i<=current) dot.classList.add('on');
+        d.appendChild(dot);
+      }
+    });
+  }
+
+  /* ---------- welcome jokes ---------- */
+  let impostorCount=0;
+  function impostor(){
+    impostorCount++;
+    const t=document.getElementById('welcomeTiny');
+    const msgs=[
+      "Nice try. The system can tell you're adorable. 😏",
+      "Hmm. Still detecting strong Payal-energy. Try again? 🤨",
+      "Okay impostor, but you're cute too… wait, that IS Payal. 💗",
+      "Access granted anyway, because you're clearly her. 🙃"
+    ];
+    t.textContent=msgs[Math.min(impostorCount-1,msgs.length-1)];
+    if(impostorCount>=3) setTimeout(()=>go(1),700);
+  }
+  function humble(){
+    const t=document.getElementById('idTiny');
+    t.textContent="ERROR 404: humility too high. Correcting… you ARE the prettiest. 💅";
+    setTimeout(()=>go(2),900);
+  }
+
+  /* ---------- cuteness slider that refuses ---------- */
+  function cuteMove(v){
+    const val=document.getElementById('cuteVal');
+    const msg=document.getElementById('cuteMsg');
+    v=Number(v);
+    val.textContent=v+'%';
+    if(v===100){ msg.textContent="Perfect. As expected. 😌"; }
+    else if(v>=70){ msg.textContent="Cute… but we both know it's higher. 😏"; }
+    else if(v>=30){ msg.textContent="Excuse me?? That's slander. 😤"; }
+    else { msg.textContent="Absolutely not. That number is a lie. 🚫"; }
+  }
+  function cuteRelease(){
+    const slider=document.getElementById('cute');
+    const val=document.getElementById('cuteVal');
+    const msg=document.getElementById('cuteMsg');
+    if(Number(slider.value)<100){
+      slider.value=100;
+      val.textContent='100%';
+      msg.textContent="Nope. Putting it back to 100%. Don't fight me. 😤💖";
+    }
+  }
+
+  /* ---------- big ask ---------- */
+  function runAway(){
+    const b=document.getElementById('noBtn');
+    b.classList.add('run');
+    const pad=20;
+    const w=b.offsetWidth, h=b.offsetHeight;
+    const x=Math.random()*(window.innerWidth - w - pad*2)+pad;
+    const y=Math.random()*(window.innerHeight - h - pad*2)+pad;
+    b.style.left=x+'px';
+    b.style.top=y+'px';
+    const lines=['No','Nope','Catch me','Try again 😜','Never 💨','Hehe no','Too slow 🏃‍♀️'];
+    b.textContent=lines[Math.floor(Math.random()*lines.length)];
+  }
+  function yesPlease(){
+    burst();
+    setTimeout(()=>go(4),650);
+  }
+
+  /* ---------- date ---------- */
+  function pickDate(){
+    const d=document.getElementById('datePick').value;
+    const t=document.getElementById('dateTiny');
+    if(!d){t.textContent="Pick a day first, please! Any day with you is a good day. 🥹";return;}
+    state.date=d;
+    go(5);
+  }
+
+  /* ---------- time ---------- */
+  function pickTime(el){
+    document.querySelectorAll('[data-time]').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    state.time=el.dataset.time;
+    document.getElementById('timeNext').disabled=false;
+  }
+
+  /* ---------- distance ---------- */
+  function pickDist(el){
+    document.querySelectorAll('[data-dist]').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    state.dist=el.dataset.dist;
+    document.getElementById('distNext').disabled=false;
+  }
+
+  /* ---------- craving ---------- */
+  function pickCrave(el){
+    document.querySelectorAll('[data-crave]').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    state.crave=el.dataset.crave;
+    document.getElementById('craveNext').disabled=false;
+  }
+  function pickHunger(){go(8);}
+
+  /* ---------- hunger ---------- */
+  function hungerMove(v){
+    const out=document.getElementById('hungerVal');
+    let label='Just a snack 🍪';
+    if(v>33) label='Properly hungry 🍕';
+    if(v>66) label='Feed me NOW 🦖';
+    if(v>92) label='I could eat the whole menu 😤🍽️';
+    state.hunger=label;
+    out.textContent=label;
+  }
+
+  /* ---------- recommendation engine ---------- */
+  function recommend(){
+    const near = state.dist==='Near';
+    const big = /NOW|whole menu/.test(state.hunger);
+    const map={
+      spicy:{
+        near:{food:'Street-side momos with the spiciest red chutney + masala chai 🌶️', plan:'Cozy spicy food crawl near home', dress:'Comfy, but make it cute 😌'},
+        far:{food:'A sizzling biryani feast + kulfi to cool down 🔥🍨', plan:'Mini road trip to that spicy place worth the drive', dress:'Road-trip chic + sunglasses 😎'}
+      },
+      sweet:{
+        near:{food:'Gulab jamun, ice cream & a long sweet-tooth walk 🍦', plan:'Dessert-first stroll around the corner', dress:'Soft, pastel, dangerously cute 🎀'},
+        far:{food:'A fancy cake café + waffles drowning in chocolate 🍫🧇', plan:'Adventure to the dreamy dessert spot far away', dress:'Cute café-photo ready 📸'}
+      },
+      cheesy:{
+        near:{food:'Cheese-loaded pizza & garlic bread, shared (mostly by you) 🧀🍕', plan:'Quick cozy cheesy feast nearby', dress:'Hoodie elegance 🫶'},
+        far:{food:'Cheesy pasta + nachos at the place across town 🧀🍝', plan:'Drive out for the cheesiest meal in the city', dress:'Effortlessly stunning, as usual ✨'}
+      },
+      surprise:{
+        near:{food:"His secret menu: your favourite snack + a tiny surprise treat 🎁", plan:'A nearby surprise he refuses to reveal yet', dress:'Whatever you wear, you’ll look unreal 😍'},
+        far:{food:'A full surprise food adventure — he planned the whole thing 🤫', plan:'Mystery road trip. Destination: classified.', dress:'Bring your smile, that’s the dress code 💖'}
+      }
+    };
+    let pick=map[state.crave][near?'near':'far'];
+    let food=pick.food;
+    if(big) food += ' …and yes, extra portions. Obviously.';
+    return {food, plan:pick.plan, dress:pick.dress};
+  }
+
+  function fmtDate(iso){
+    if(!iso) return '—';
+    const d=new Date(iso+'T00:00:00');
+    return d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  }
+
+  function generate(){
+    const r=recommend();
+    document.getElementById('rDate').textContent=fmtDate(state.date);
+    document.getElementById('rTime').textContent=state.time||'—';
+    document.getElementById('rDist').textContent=state.dist+(state.dist==='Near'?' 🏠':' 🚗');
+    document.getElementById('rPlan').textContent=r.plan;
+    document.getElementById('rFood').textContent=r.food;
+    document.getElementById('rDress').textContent=r.dress;
+    document.getElementById('ticketId').textContent='#PAYAL-'+String(Math.floor(1000+Math.random()*9000));
+    burst();
+    go(9);
+  }
+
+  function restart(){
+    state.date='';state.time='';state.dist='';state.crave='';state.hunger='snack';
+    document.querySelectorAll('.chip.sel').forEach(c=>c.classList.remove('sel'));
+    document.getElementById('timeNext').disabled=true;
+    document.getElementById('distNext').disabled=true;
+    document.getElementById('craveNext').disabled=true;
+    document.getElementById('datePick').value='';
+    document.getElementById('hunger').value=50;hungerMove(50);
+    document.getElementById('cute').value=100;cuteMove(100);
+    go(0);
+  }
+
+  /* ---------- confetti ---------- */
+  function burst(){
+    const wrap=document.getElementById('confetti');
+    const colors=['#ff4d8d','#ffb703','#c77dff','#ff8fab','#ffd166'];
+    for(let i=0;i<70;i++){
+      const c=document.createElement('i');
+      c.style.left=Math.random()*100+'vw';
+      c.style.background=colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration=(2.2+Math.random()*1.8)+'s';
+      c.style.animationDelay=(Math.random()*0.4)+'s';
+      wrap.appendChild(c);
+      setTimeout(()=>c.remove(),4500);
+    }
+  }
+
+  paintDots();
+</script>
+</body>
+</html>
